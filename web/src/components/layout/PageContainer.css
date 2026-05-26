@@ -19,10 +19,8 @@
   font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 1.2;
-  background: var(--accent-gradient-text);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: var(--accent-primary-text);
+
   margin-bottom: var(--space-xs);
 }
 

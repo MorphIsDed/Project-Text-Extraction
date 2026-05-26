@@ -57,6 +57,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
   };
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchHealth();
     
     // Poll health status every 30 seconds
@@ -109,7 +110,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
       >
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
           {/* Appearance setting */}
-          <div className="settings-card glass-card">
+          <div className="settings-card premium-card">
             <h3 className="settings-card__title">
               <Monitor size={18} />
               <span>Appearance</span>
@@ -131,7 +132,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           </div>
 
           {/* Keyboard Shortcuts */}
-          <div className="settings-card glass-card">
+          <div className="settings-card premium-card">
             <h3 className="settings-card__title">
               <Keyboard size={18} />
               <span>Keyboard Shortcuts</span>
@@ -158,7 +159,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-lg)' }}>
           {/* System Health */}
-          <div className="settings-card glass-card">
+          <div className="settings-card premium-card">
             <h3 className="settings-card__title" style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Heart size={18} />
@@ -216,7 +217,7 @@ export const SettingsPage: React.FC<SettingsPageProps> = ({
           </div>
 
           {/* Supported Document types */}
-          <div className="settings-card glass-card">
+          <div className="settings-card premium-card">
             <h3 className="settings-card__title">
               <Info size={18} />
               <span>Supported Documents</span>

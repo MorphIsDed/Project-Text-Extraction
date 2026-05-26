@@ -35,7 +35,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
   ];
 
   return (
-    <div className="results-panel glass-card">
+    <div className="results-panel premium-card">
       <div className="results-panel__tabs">
         <div className="results-panel__tab-list" role="tablist" aria-label="Extraction Results">
           {tabs.map((tab) => {
@@ -70,7 +70,7 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
           <div className="results-panel__actions">
             <a
               href={downloadUrl}
-              download={`${(data as any).filename || 'extracted_data'}.json`}
+              download={`${(data as Record<string, unknown>).filename || 'extracted_data'}.json`}
               className="results-panel__download-btn"
               title="Download results as JSON file"
             >
@@ -100,8 +100,8 @@ export const ResultsPanel: React.FC<ResultsPanelProps> = ({
                 {data.review_notes && data.review_notes.length > 0 && (
                   <ReviewNotes notes={data.review_notes} needsReview={data.needs_review} />
                 )}
-                {(data as any).people && (data as any).people.length > 1 && (
-                  <PeopleTable people={(data as any).people} />
+                {(data as Record<string, unknown>).people && (data as Record<string, unknown>).people.length > 1 && (
+                  <PeopleTable people={(data as Record<string, unknown>).people} />
                 )}
               </div>
             </motion.div>

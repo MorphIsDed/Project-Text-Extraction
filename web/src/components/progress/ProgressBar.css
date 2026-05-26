@@ -31,7 +31,7 @@
 }
 
 .progress-bar__percentage--complete {
-  color: var(--accent-green);
+  color: var(--feedback-success);
 }
 
 /* ---------- Track ---------- */
@@ -41,9 +41,8 @@
   height: 8px;
   border-radius: var(--radius-full);
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+
+  border: 1px solid var(--surface-border);
   overflow: hidden;
 }
 
@@ -54,15 +53,15 @@
   left: 0;
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--accent-gradient);
+  background: var(--accent-primary);
   transition: box-shadow var(--transition-base);
 }
 
 /* Green glow when complete */
 .progress-bar__fill--complete {
-  background: var(--accent-green);
-  box-shadow: 0 0 12px var(--accent-green-glow),
-              0 0 24px var(--accent-green-glow);
+  background: var(--feedback-success);
+  box-shadow: 0 0 12px var(--feedback-success-glow),
+              0 0 24px var(--feedback-success-glow);
 }
 
 /* ---------- Shimmer overlay ---------- */

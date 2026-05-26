@@ -51,11 +51,11 @@ const AppContent: React.FC = () => {
       <Toaster
         position="bottom-right"
         toastOptions={{
-          className: 'glass-card',
+          className: 'premium-card',
           style: {
             background: isDark ? 'rgba(20, 20, 25, 0.85)' : 'rgba(255, 255, 255, 0.85)',
             color: isDark ? 'var(--text-primary)' : 'var(--text-primary)',
-            border: '1px solid var(--glass-border)',
+            border: '1px solid var(--surface-border)',
             backdropFilter: 'blur(12px)',
             fontFamily: 'var(--font-sans)',
             fontSize: 'var(--text-sm)',

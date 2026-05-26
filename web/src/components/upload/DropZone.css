@@ -11,11 +11,10 @@
   gap: var(--space-md);
   min-height: 280px;
   padding: var(--space-2xl) var(--space-xl);
-  border: 2px dashed var(--glass-border-hover);
+  border: 2px dashed var(--surface-border-hover);
   border-radius: var(--radius-xl);
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
+
   cursor: pointer;
   overflow: hidden;
   transition:
@@ -25,9 +24,9 @@
 }
 
 .dropzone:hover {
-  border-color: var(--accent-blue);
+  border-color: var(--accent-primary);
   background: var(--bg-card-hover);
-  box-shadow: 0 0 24px var(--accent-blue-glow);
+  
 }
 
 .dropzone:hover .dropzone__icon-wrapper {
@@ -41,12 +40,12 @@
 /* Active (drag over) state */
 .dropzone--active {
   border-style: solid;
-  border-color: var(--accent-purple);
+  border-color: var(--accent-primary);
   background: var(--bg-card-active);
   box-shadow:
-    0 0 32px var(--accent-blue-glow),
-    0 0 64px var(--accent-purple-glow);
-  animation: pulse-glow 2s ease-in-out infinite;
+    0 0 32px var(--accent-primary-subtle),
+    0 0 64px var(--accent-primary-subtle);
+  
 }
 
 .dropzone--active .dropzone__icon-wrapper {
@@ -68,17 +67,17 @@
   border-radius: var(--radius-xl);
   background: conic-gradient(
     from 0deg,
-    var(--accent-blue),
-    var(--accent-purple),
-    var(--accent-green),
-    var(--accent-blue)
+    var(--accent-primary),
+    var(--accent-primary),
+    var(--feedback-success),
+    var(--accent-primary)
   );
   opacity: 0;
   z-index: -1;
   filter: blur(8px);
   transition: opacity var(--transition-slow);
-  animation: gradient-shift 4s ease infinite;
-  background-size: 200% 200%;
+  
+  
 }
 
 /* ---------- Icon ---------- */
@@ -90,15 +89,15 @@
   width: 72px;
   height: 72px;
   border-radius: var(--radius-lg);
-  background: var(--accent-blue-soft);
-  color: var(--accent-blue);
-  animation: breathe 3s ease-in-out infinite;
+  background: var(--accent-primary-subtle);
+  color: var(--accent-primary);
+  
   transition: background var(--transition-base);
 }
 
 .dropzone--active .dropzone__icon-wrapper {
-  background: var(--accent-purple-glow);
-  color: var(--accent-purple);
+  background: var(--accent-primary-subtle);
+  color: var(--accent-primary);
 }
 
 .dropzone__icon {
@@ -127,7 +126,7 @@
 }
 
 .dropzone__subtitle em {
-  color: var(--accent-blue);
+  color: var(--accent-primary);
   font-style: normal;
   font-weight: 500;
   cursor: pointer;
@@ -146,7 +145,7 @@
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--accent-blue-glow) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--accent-primary-subtle) 0%, transparent 70%);
   pointer-events: none;
 }
 

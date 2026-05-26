@@ -98,7 +98,7 @@ export const BatchPage: React.FC = () => {
         <div className="batch-page">
           {/* ---- Upload Area ---- */}
           <motion.div
-            className="batch-page__upload-area glass-card"
+            className="batch-page__upload-area premium-card"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
@@ -139,7 +139,7 @@ export const BatchPage: React.FC = () => {
                     return (
                       <motion.div
                         key={`${file.name}-${index}`}
-                        className="batch-page__file-card glass-card"
+                        className="batch-page__file-card premium-card"
                         variants={staggerItem}
                         exit="exit"
                         layout
@@ -221,7 +221,7 @@ export const BatchPage: React.FC = () => {
                     className="batch-page__clear-btn"
                     onClick={clearFiles}
                     type="button"
-                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--glass-border)', padding: '0 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: 'var(--text-primary)', transition: 'all 0.2s' }}
+                    style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--surface-border)', padding: '0 16px', borderRadius: 'var(--radius-md)', cursor: 'pointer', color: 'var(--text-primary)', transition: 'all 0.2s' }}
                   >
                     Clear All
                   </button>
@@ -234,7 +234,7 @@ export const BatchPage: React.FC = () => {
           <AnimatePresence>
             {isProcessing && (
               <motion.div
-                className="batch-page__progress-section glass-card"
+                className="batch-page__progress-section premium-card"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -253,7 +253,7 @@ export const BatchPage: React.FC = () => {
                     initial={{ width: 0 }}
                     animate={{ width: `${overallProgress}%` }}
                     transition={{ type: 'spring', stiffness: 80, damping: 20 }}
-                    style={{ height: '100%', background: 'var(--accent-gradient)' }}
+                    style={{ height: '100%', background: 'var(--accent-primary)' }}
                   />
                 </div>
               </motion.div>
@@ -290,7 +290,7 @@ export const BatchPage: React.FC = () => {
                     return (
                       <motion.div
                         key={`result-${i}`}
-                        className="batch-page__result-card glass-card"
+                        className="batch-page__result-card premium-card"
                         variants={staggerItem}
                         whileHover={{ scale: 1.01 }}
                         style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}
@@ -298,7 +298,7 @@ export const BatchPage: React.FC = () => {
                         <span className="batch-page__result-card-filename" style={{ fontWeight: 600, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                           {meta.icon} {res.filename}
                         </span>
-                        <span className="batch-page__result-card-type" style={{ fontSize: '12px', color: 'var(--accent-blue)', fontWeight: 500 }}>
+                        <span className="batch-page__result-card-type" style={{ fontSize: '12px', color: 'var(--accent-primary)', fontWeight: 500 }}>
                           {meta.label}
                         </span>
                         <span className="batch-page__result-card-fields" style={{ fontSize: '11px', color: 'var(--text-muted)' }}>

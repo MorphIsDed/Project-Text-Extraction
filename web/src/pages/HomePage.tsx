@@ -91,7 +91,7 @@ export const HomePage: React.FC = () => {
               initial="hidden"
               animate="visible"
             >
-              <div className="home-page__upload-card glass-card">
+              <div className="home-page__upload-card premium-card">
                 <span className="home-page__section-title section-label" style={{ display: 'block', marginBottom: '16px' }}>
                   Upload Document
                 </span>
@@ -152,7 +152,7 @@ export const HomePage: React.FC = () => {
                 {isIdle && !result && (
                   <motion.div
                     key="placeholder"
-                    className="home-page__results-placeholder glass-card"
+                    className="home-page__results-placeholder premium-card"
                     variants={resultVariants}
                     initial="hidden"
                     animate="visible"
@@ -174,7 +174,7 @@ export const HomePage: React.FC = () => {
                 {isProcessing && (
                   <motion.div
                     key="processing"
-                    className="home-page__processing glass-card"
+                    className="home-page__processing premium-card"
                     variants={resultVariants}
                     initial="hidden"
                     animate="visible"

@@ -22,7 +22,7 @@ export const JsonViewer: React.FC<JsonViewerProps> = ({ data }) => {
   // Syntax highlight function returning HTML safely
   const highlightedHtml = useMemo(() => {
     // Escaping HTML characters first
-    let escaped = jsonString
+    const escaped = jsonString
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');

@@ -30,7 +30,7 @@
   opacity: 0;
   transition: opacity var(--transition-base);
   pointer-events: none;
-  box-shadow: 0 0 20px currentColor;
+  
 }
 
 .doc-badge:hover::after {

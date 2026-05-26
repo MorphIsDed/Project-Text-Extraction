@@ -18,8 +18,7 @@
 /* Glassmorphic Alert Variants */
 .status-banner--success {
   background: rgba(16, 185, 129, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+
   border: 1px solid rgba(16, 185, 129, 0.2);
   border-left: 4px solid #10b981;
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.05);
@@ -27,8 +26,7 @@
 
 .status-banner--error {
   background: rgba(239, 68, 68, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+
   border: 1px solid rgba(239, 68, 68, 0.2);
   border-left: 4px solid #ef4444;
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.05);
@@ -36,8 +34,7 @@
 
 .status-banner--info {
   background: rgba(59, 130, 246, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+
   border: 1px solid rgba(59, 130, 246, 0.2);
   border-left: 4px solid #3b82f6;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.05);

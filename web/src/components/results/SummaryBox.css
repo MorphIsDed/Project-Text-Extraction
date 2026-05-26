@@ -4,11 +4,10 @@
 
 .summary-box {
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+
+  border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--surface-shadow);
   padding: var(--space-lg);
   position: relative;
   overflow: hidden;
@@ -25,18 +24,18 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background: var(--accent-gradient);
+  background: var(--accent-primary);
   border-radius: 4px 0 0 4px;
 }
 
 /* Review warning state */
 .summary-box--review {
-  border-color: var(--accent-amber-soft);
-  animation: pulse-glow-amber 3s ease-in-out infinite;
+  border-color: var(--feedback-warning-subtle);
+  
 }
 
 .summary-box--review::before {
-  background: linear-gradient(180deg, var(--accent-amber), var(--accent-red));
+  background: linear-gradient(180deg, var(--feedback-warning), var(--feedback-error));
 }
 
 /* Badge row */
@@ -70,43 +69,43 @@
 
 /* Status variants */
 .summary-box__status--success {
-  color: var(--accent-green);
-  background: var(--accent-green-soft);
+  color: var(--feedback-success);
+  background: var(--feedback-success-soft);
 }
 
 .summary-box__status--success .summary-box__status-dot {
-  background: var(--accent-green);
-  box-shadow: 0 0 8px var(--accent-green-glow);
+  background: var(--feedback-success);
+  
 }
 
 .summary-box__status--partial {
-  color: var(--accent-amber);
-  background: var(--accent-amber-soft);
+  color: var(--feedback-warning);
+  background: var(--feedback-warning-subtle);
 }
 
 .summary-box__status--partial .summary-box__status-dot {
-  background: var(--accent-amber);
-  box-shadow: 0 0 8px var(--accent-amber-glow);
+  background: var(--feedback-warning);
+  
 }
 
 .summary-box__status--failed {
-  color: var(--accent-red);
-  background: var(--accent-red-soft);
+  color: var(--feedback-error);
+  background: var(--feedback-error-soft);
 }
 
 .summary-box__status--failed .summary-box__status-dot {
-  background: var(--accent-red);
-  box-shadow: 0 0 8px var(--accent-red-glow);
+  background: var(--feedback-error);
+  
 }
 
 .summary-box__status--needs_review {
-  color: var(--accent-amber);
-  background: var(--accent-amber-soft);
+  color: var(--feedback-warning);
+  background: var(--feedback-warning-subtle);
 }
 
 .summary-box__status--needs_review .summary-box__status-dot {
-  background: var(--accent-amber);
-  animation: pulse-glow-amber 2s ease-in-out infinite;
+  background: var(--feedback-warning);
+  
 }
 
 /* Summary heading */

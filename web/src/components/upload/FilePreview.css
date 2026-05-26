@@ -8,11 +8,10 @@
   gap: var(--space-md);
   padding: var(--space-md) var(--space-lg);
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+
+  border: 1px solid var(--surface-border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--glass-shadow);
+  box-shadow: var(--surface-shadow);
   transition:
     background var(--transition-base),
     border-color var(--transition-base),
@@ -21,8 +20,8 @@
 
 .file-preview:hover {
   background: var(--bg-card-hover);
-  border-color: var(--glass-border-hover);
-  box-shadow: var(--glass-shadow-hover);
+  border-color: var(--surface-border-hover);
+  box-shadow: var(--surface-shadow-hover);
 }
 
 /* ---------- Icon ---------- */
@@ -38,13 +37,13 @@
 }
 
 .file-preview__icon--pdf {
-  background: var(--accent-red-soft);
-  color: var(--accent-red);
+  background: var(--feedback-error-soft);
+  color: var(--feedback-error);
 }
 
 .file-preview__icon--image {
-  background: var(--accent-blue-soft);
-  color: var(--accent-blue);
+  background: var(--accent-primary-subtle);
+  color: var(--accent-primary);
 }
 
 .file-preview__icon svg {
@@ -95,9 +94,9 @@
 }
 
 .file-preview__remove:hover {
-  color: var(--accent-red);
-  background: var(--accent-red-soft);
-  border-color: var(--accent-red-soft);
+  color: var(--feedback-error);
+  background: var(--feedback-error-soft);
+  border-color: var(--feedback-error-soft);
 }
 
 .file-preview__remove svg {

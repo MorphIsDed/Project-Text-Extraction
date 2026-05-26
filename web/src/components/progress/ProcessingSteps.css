@@ -30,10 +30,9 @@
   justify-content: center;
   position: relative;
   background: var(--bg-card);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+
+  border: 1px solid var(--surface-border);
+  box-shadow: var(--surface-shadow);
   color: var(--text-muted);
   transition: border-color var(--transition-base),
               box-shadow var(--transition-base);
@@ -52,27 +51,27 @@
 
 /* Active step */
 .processing-steps__circle--active {
-  background: var(--accent-gradient);
-  border-color: var(--accent-blue);
+  background: var(--accent-primary);
+  border-color: var(--accent-primary);
   color: #fff;
-  box-shadow: var(--shadow-glow-blue);
+  box-shadow: var(--shadow-lg);
   animation: step-pulse 2.4s ease-in-out infinite;
 }
 
 /* Completed step */
 .processing-steps__circle--completed {
-  background: var(--accent-green);
-  border-color: var(--accent-green);
+  background: var(--feedback-success);
+  border-color: var(--feedback-success);
   color: #fff;
-  box-shadow: var(--shadow-glow-green);
+  box-shadow: var(--shadow-lg);
 }
 
 /* Failed step */
 .processing-steps__circle--failed {
-  background: var(--accent-red-soft);
-  border-color: var(--accent-red);
-  color: var(--accent-red);
-  box-shadow: 0 0 16px var(--accent-red-glow);
+  background: var(--feedback-error-soft);
+  border-color: var(--feedback-error);
+  color: var(--feedback-error);
+  
 }
 
 /* ---------- Animated Checkmark SVG ---------- */
@@ -118,7 +117,7 @@
   left: 0;
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--accent-gradient);
+  background: var(--accent-primary);
 }
 
 /* ---------- Step Label ---------- */
@@ -134,15 +133,15 @@
 }
 
 .processing-steps__label--active {
-  color: var(--accent-blue);
+  color: var(--accent-primary);
 }
 
 .processing-steps__label--completed {
-  color: var(--accent-green);
+  color: var(--feedback-success);
 }
 
 .processing-steps__label--failed {
-  color: var(--accent-red);
+  color: var(--feedback-error);
 }
 
 /* ---------- Glow ring behind active circle ---------- */
@@ -150,7 +149,7 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  background: var(--accent-gradient);
+  background: var(--accent-primary);
   opacity: 0.18;
   filter: blur(10px);
   animation: step-breathe 2.4s ease-in-out infinite;

@@ -14,8 +14,8 @@
   color: white;
   cursor: pointer;
   overflow: hidden;
-  background: var(--accent-gradient);
-  background-size: 200% 200%;
+  background: var(--accent-primary);
+  
   transition:
     background-position var(--transition-slow),
     box-shadow var(--transition-base),
@@ -24,11 +24,11 @@
 
 .upload-button:hover:not(.upload-button--disabled) {
   background-position: 100% 50%;
-  box-shadow: var(--shadow-glow-blue), var(--shadow-glow-purple);
+  box-shadow: var(--shadow-lg), var(--shadow-lg);
 }
 
 .upload-button:focus-visible {
-  outline: 2px solid var(--accent-blue);
+  outline: 2px solid var(--accent-primary);
   outline-offset: 2px;
 }
 
@@ -37,14 +37,14 @@
 .upload-button--disabled {
   opacity: 0.45;
   cursor: not-allowed;
-  background: var(--accent-gradient);
+  background: var(--accent-primary);
   box-shadow: none;
 }
 
 .upload-button--loading {
   cursor: wait;
-  animation: gradient-shift 2s ease infinite;
-  background-size: 200% 200%;
+  
+  
 }
 
 /* ---------- Content ---------- */

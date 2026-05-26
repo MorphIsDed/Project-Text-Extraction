@@ -46,13 +46,15 @@ export const HistoryPage: React.FC = () => {
 
   // Poll in-progress tasks on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTasks();
 
     const interval = setInterval(() => {
       // If there are processing/pending tasks, let's auto-refresh
       const activeTasks = tasks.some(t => t.status === 'processing' || t.status === 'pending');
       if (activeTasks) {
-        fetchTasks();
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchTasks();
       }
     }, 5000);
 
@@ -154,7 +156,7 @@ export const HistoryPage: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="history-empty glass-card"
+          className="history-empty premium-card"
         >
           <Clock className="history-empty__icon" />
           <h3 className="history-empty__title">No documents found</h3>
@@ -185,7 +187,7 @@ export const HistoryPage: React.FC = () => {
                   hidden: { opacity: 0, y: 15 },
                   show: { opacity: 1, y: 0 },
                 }}
-                className="history-card glass-card"
+                className="history-card premium-card"
                 onClick={() => handleToggleExpand(task.task_id, task.status)}
               >
                 <div className="history-card__top">

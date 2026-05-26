@@ -172,7 +172,7 @@ def display_document_result(data: dict, doc_type: str):
             print(f"  Overall: {bar} {confidence:.1%}")
 
 
-async def test_document(doc_type: str, file_path: str):
+async def run_document_test(doc_type: str, file_path: str):
     """Test a single document"""
     
     print("\n" + "=" * 80)
@@ -226,7 +226,7 @@ async def test_all():
     results = {}
     
     for doc_type, file_path in TEST_FILES.items():
-        success = await test_document(doc_type, file_path)
+        success = await run_document_test(doc_type, file_path)
         results[doc_type] = success
     
     # Summary
@@ -246,7 +246,7 @@ async def test_all():
     print("=" * 80)
 
 
-async def test_single(doc_type: str):
+async def run_single_test(doc_type: str):
     """Test a single document type"""
     
     if doc_type not in TEST_FILES:
@@ -255,7 +255,7 @@ async def test_single(doc_type: str):
         return
     
     file_path = TEST_FILES[doc_type]
-    await test_document(doc_type, file_path)
+    await run_document_test(doc_type, file_path)
 
 
 if __name__ == "__main__":
