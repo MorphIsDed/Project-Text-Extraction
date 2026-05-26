@@ -1,15 +1,7 @@
 """
 Post-processing and validation rules for extracted documents.
 
-This layer is intentionally conservative:
-- prefer null over a risky guess
-- normalize known formats
-- mark suspicious fields for review
-
-NEW ARCHITECTURE:
-- Works with typed documents (ExtractedDocument)
-- Returns typed documents (not dicts)
-- Uses structured ReviewFlag model
+Modularized and integrated with OOPS Strategy pattern delegates.
 """
 
 from __future__ import annotations
@@ -17,9 +9,8 @@ from __future__ import annotations
 import re
 import logging
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
-# NEW: Import typed schemas
 from models.schemas import (
     ExtractedDocument,
     AadhaarDocument,
@@ -29,7 +20,6 @@ from models.schemas import (
 )
 
 logger = logging.getLogger(__name__)
-
 
 AADHAAR_KEYWORDS = {
     "government",
@@ -52,196 +42,206 @@ HINDI_MALE = "\u092a\u0941\u0930\u0941\u0937"
 HINDI_FEMALE = "\u092e\u0939\u093f\u0932\u093e"
 
 
+# ============================================================
+# MAIN ENTRY POINT (OOP DELEGATION)
+# ============================================================
+
 def post_process_document(
     document: ExtractedDocument,
     ocr_text: str = "",
     request_id: Optional[str] = None
 ) -> ExtractedDocument:
     """
-    Post-process extracted document.
-    
-    NEW ARCHITECTURE:
-    - Accepts typed document (not dict)
-    - Returns typed document (not dict)
-    - Uses structured ReviewFlag model
+    Post-process extracted document using Strategy Processor Factory.
     
     Args:
         document: Typed document from extraction
-        ocr_text: Raw OCR text for fallback extraction
+        ocr_text: Raw OCR text for verification and fallback
         request_id: Correlation ID for logging
-    
+        
     Returns:
-        Post-processed typed document
+        Post-processed and validated document
     """
     log_prefix = f"[{request_id}]" if request_id else ""
     
-    # Check if document failed extraction
     if document.processing_status == ProcessingStatus.FAILED:
         logger.warning(f"{log_prefix} Skipping post-processing for failed document")
         return document
+        
+    from services.processors import DocumentProcessorFactory
     
-    # Route to document-type-specific post-processing
-    doc_type = document.document_type.lower()
+    # Resolve strategy from O(1) factory registry
+    doc_type = document.document_type.value if hasattr(document.document_type, "value") else str(document.document_type)
+    processor = DocumentProcessorFactory.get_processor(doc_type)
     
-    if doc_type == "aadhaar" and isinstance(document, AadhaarDocument):
-        logger.info(f"{log_prefix} Post-processing Aadhaar document")
-        return _post_process_aadhaar(document, ocr_text, request_id)
-    
-    # TODO: Add post-processing for other document types
-    # elif doc_type == "pan" and isinstance(document, PANDocument):
-    #     return _post_process_pan(document, ocr_text, request_id)
-    
-    # No post-processing needed for this document type
-    logger.info(f"{log_prefix} No post-processing rules for {doc_type}")
-    return document
+    logger.info(f"{log_prefix} Executing OOP post-processing strategy for '{doc_type}'")
+    return processor.post_process(document, ocr_text, request_id or "")
 
 
-def _post_process_aadhaar(
-    document: AadhaarDocument,
-    ocr_text: str,
-    request_id: Optional[str] = None
-) -> AadhaarDocument:
+# ============================================================
+# REUSABLE VALIDATION HELPERS (DSA ALGORITHMS)
+# ============================================================
+
+def add_review_flag(
+    document: ExtractedDocument,
+    field: str,
+    severity: ReviewSeverity,
+    reason: str,
+    request_id: str = ""
+) -> None:
+    """Safely appends a new structured review flag to the document."""
+    log_prefix = f"[{request_id}]" if request_id else ""
+    
+    # Check if this flag already exists to prevent duplicate additions
+    exists = any(f.field == field and f.reason == reason for f in document.review_flags)
+    if not exists:
+        flag = ReviewFlag(field=field, severity=severity, reason=reason)
+        document.review_flags.append(flag)
+        logger.info(f"{log_prefix} Added {severity.value} flag on '{field}': {reason}")
+
+
+def check_needs_review_logical(document: ExtractedDocument, request_id: str = "") -> ExtractedDocument:
     """
-    Post-process Aadhaar document.
-    
-    NEW ARCHITECTURE:
-    - Works with typed AadhaarDocument
-    - Uses structured ReviewFlag model
-    - Returns typed document
-    
-    Args:
-        document: Aadhaar document from extraction
-        ocr_text: Raw OCR text for fallback
-        request_id: Correlation ID
-    
-    Returns:
-        Post-processed Aadhaar document
+    Evaluates logical flags to determine if the document requires manual review.
+    Upgrades the overall document processing status accordingly.
     """
     log_prefix = f"[{request_id}]" if request_id else ""
     
-    # Collect review flags
-    review_flags: list[ReviewFlag] = list(document.review_flags)  # Preserve existing flags
-    review_notes: list[str] = list(document.review_notes)  # Preserve existing notes
+    # If any HIGH or MEDIUM severity flags exist, the document needs review
+    has_critical_flags = any(
+        f.severity in [ReviewSeverity.HIGH, ReviewSeverity.MEDIUM]
+        for f in document.review_flags
+    )
     
-    # Process name
-    extracted_name = _normalize_spaces(document.name)
+    if has_critical_flags or document.needs_review:
+        document.processing_status = ProcessingStatus.NEEDS_REVIEW
+        logger.warning(f"{log_prefix} Document marked as NEEDS_REVIEW")
+    else:
+        document.processing_status = ProcessingStatus.SUCCESS
+        
+    return document
+
+
+def validate_name_ocr(document: ExtractedDocument, ocr_text: str, request_id: str = "") -> ExtractedDocument:
+    """Verifies extracted name against OCR text to find discrepancy flags."""
+    if not hasattr(document, "name") or not getattr(document, "name"):
+        return document
+        
+    extracted_name = _normalize_spaces(getattr(document, "name"))
     cleaned_name = _clean_name(extracted_name)
     name_reasons = _name_review_reasons(cleaned_name)
     
     if name_reasons:
+        # OCR fallback extraction
         ocr_candidate = _best_ocr_name_candidate(ocr_text)
         if ocr_candidate and not _name_review_reasons(ocr_candidate):
-            review_flags.append(ReviewFlag(
+            add_review_flag(
+                document,
                 field="name",
                 severity=ReviewSeverity.MEDIUM,
-                reason=f"Name replaced with OCR candidate. Issues: {', '.join(name_reasons)}"
-            ))
-            review_notes.append("Name was normalized using OCR-supported text.")
-            document.name = ocr_candidate
-            logger.info(f"{log_prefix} Name replaced with OCR candidate: {ocr_candidate}")
+                reason=f"Name normalized using OCR candidate due to: {', '.join(name_reasons)}",
+                request_id=request_id
+            )
+            document.review_notes.append("Name was normalized using OCR text.")
+            setattr(document, "name", ocr_candidate)
         else:
-            review_flags.append(ReviewFlag(
+            add_review_flag(
+                document,
                 field="name",
                 severity=ReviewSeverity.HIGH,
-                reason=f"Name cleared due to: {', '.join(name_reasons)}"
-            ))
-            review_notes.append("Name was cleared because it looked noisy or unreliable.")
-            document.name = None
-            logger.warning(f"{log_prefix} Name cleared due to quality issues")
+                reason=f"Name cleared due to validation issues: {', '.join(name_reasons)}",
+                request_id=request_id
+            )
+            document.review_notes.append("Name was cleared because it was flagged as unreliable.")
+            setattr(document, "name", None)
     else:
-        document.name = cleaned_name
-    
-    # Process date of birth
-    normalized_dob, dob_reason = _normalize_aadhaar_dob(document.date_of_birth, ocr_text)
-    if document.date_of_birth != normalized_dob:
-        document.date_of_birth = normalized_dob
-        if dob_reason:
-            review_flags.append(ReviewFlag(
-                field="date_of_birth",
-                severity=ReviewSeverity.MEDIUM,
-                reason=dob_reason
-            ))
-            logger.info(f"{log_prefix} DOB normalized: {normalized_dob}")
-    
-    # Process gender
-    normalized_gender, gender_reason = _normalize_gender(document.gender, ocr_text)
-    if normalized_gender != document.gender:
-        if gender_reason:
-            review_flags.append(ReviewFlag(
-                field="gender",
-                severity=ReviewSeverity.MEDIUM,
-                reason=gender_reason
-            ))
-        if document.gender and normalized_gender is None:
-            review_flags.append(ReviewFlag(
-                field="gender",
-                severity=ReviewSeverity.HIGH,
-                reason="Gender value was not reliable enough to keep."
-            ))
-        document.gender = normalized_gender
-        logger.info(f"{log_prefix} Gender normalized: {normalized_gender}")
-    
-    # Process Aadhaar number (CRITICAL: Security)
-    aadhaar_value = document.aadhaar_number_masked
-    if not aadhaar_value and document.raw_fields:
-        # Gemini sometimes puts unmasked number in raw_fields
-        aadhaar_value = document.raw_fields.get("aadhaar_number")
-    
-    normalized_aadhaar, aadhaar_reason = _normalize_masked_aadhaar(
-        aadhaar_value,
-        ocr_text,
-    )
-    if document.aadhaar_number_masked != normalized_aadhaar:
-        document.aadhaar_number_masked = normalized_aadhaar
-        if aadhaar_reason:
-            review_flags.append(ReviewFlag(
-                field="aadhaar_number_masked",
-                severity=ReviewSeverity.HIGH,
-                reason=aadhaar_reason
-            ))
-            logger.warning(f"{log_prefix} Aadhaar number: {aadhaar_reason}")
-    
-    # Process PIN code
-    normalized_pin = _normalize_pin_code(document.pin_code, document.address, ocr_text)
-    if document.pin_code and normalized_pin is None:
-        review_flags.append(ReviewFlag(
-            field="pin_code",
-            severity=ReviewSeverity.LOW,
-            reason="PIN code was not a valid 6-digit value."
-        ))
-    document.pin_code = normalized_pin
-    
-    # Process address
-    normalized_address = _normalize_address(document.address)
-    if document.address and normalized_address is None:
-        review_flags.append(ReviewFlag(
-            field="address",
-            severity=ReviewSeverity.MEDIUM,
-            reason="Address looked too fragmentary to trust."
-        ))
-    document.address = normalized_address
-    
-    # Process side detected
-    side = _normalize_side_detected(document.side_detected)
-    if document.side_detected and side is None:
-        review_flags.append(ReviewFlag(
-            field="side_detected",
-            severity=ReviewSeverity.LOW,
-            reason="Side detection value was not recognized."
-        ))
-    document.side_detected = side
-    
-    # Update review flags and notes
-    document.review_flags = review_flags
-    document.review_notes = review_notes
-    
-    # Update processing status based on review flags
-    if document.needs_review:
-        document.processing_status = ProcessingStatus.NEEDS_REVIEW
-    
-    logger.info(f"{log_prefix} Aadhaar post-processing complete: {len(review_flags)} flags")
+        setattr(document, "name", cleaned_name)
+        
     return document
 
+
+def validate_document_numbers(document: ExtractedDocument, ocr_text: str, request_id: str = "") -> ExtractedDocument:
+    """Validates document numbers and enforces security masking where applicable."""
+    doc_type = document.document_type.value if hasattr(document.document_type, "value") else str(document.document_type)
+    
+    # Aadhaar Masked Verification
+    if doc_type == "aadhaar" and hasattr(document, "aadhaar_number_masked"):
+        aadhaar_value = getattr(document, "aadhaar_number_masked")
+        if not aadhaar_value and document.raw_fields:
+            aadhaar_value = document.raw_fields.get("aadhaar_number")
+            
+        normalized_aadhaar, aadhaar_reason = _normalize_masked_aadhaar(aadhaar_value, ocr_text)
+        if getattr(document, "aadhaar_number_masked") != normalized_aadhaar:
+            setattr(document, "aadhaar_number_masked", normalized_aadhaar)
+            if aadhaar_reason:
+                add_review_flag(
+                    document,
+                    field="aadhaar_number_masked",
+                    severity=ReviewSeverity.HIGH,
+                    reason=aadhaar_reason,
+                    request_id=request_id
+                )
+                
+    # PAN Verification
+    elif doc_type == "pan" and hasattr(document, "pan_number"):
+        pan = getattr(document, "pan_number")
+        if pan:
+            pan_str = str(pan).upper().replace(" ", "")
+            # Standard PAN format: 5 letters, 4 digits, 1 letter
+            if not re.match(r"^[A-Z]{5}[0-9]{4}[A-Z]$", pan_str):
+                add_review_flag(
+                    document,
+                    field="pan_number",
+                    severity=ReviewSeverity.HIGH,
+                    reason=f"PAN number '{pan}' does not match standard 10-character alphanumeric format.",
+                    request_id=request_id
+                )
+                
+    return document
+
+
+def validate_dates(document: ExtractedDocument, request_id: str = "") -> ExtractedDocument:
+    """Validates extracted birth, issue, or expiry dates."""
+    doc_type = document.document_type.value if hasattr(document.document_type, "value") else str(document.document_type)
+    
+    # DOB Verification
+    if hasattr(document, "date_of_birth"):
+        dob = getattr(document, "date_of_birth")
+        if dob:
+            normalized_dob = _coerce_dob(str(dob))
+            if not normalized_dob:
+                add_review_flag(
+                    document,
+                    field="date_of_birth",
+                    severity=ReviewSeverity.MEDIUM,
+                    reason=f"Date of birth '{dob}' did not match DD/MM/YYYY or YYYY format.",
+                    request_id=request_id
+                )
+            else:
+                setattr(document, "date_of_birth", normalized_dob)
+                
+    # Expiry Date Verification (Passports, Driving Licenses)
+    if hasattr(document, "date_of_expiry"):
+        expiry = getattr(document, "date_of_expiry")
+        if expiry:
+            normalized_expiry = _coerce_dob(str(expiry))
+            if not normalized_expiry:
+                add_review_flag(
+                    document,
+                    field="date_of_expiry",
+                    severity=ReviewSeverity.MEDIUM,
+                    reason=f"Expiry date '{expiry}' did not match DD/MM/YYYY format.",
+                    request_id=request_id
+                )
+            else:
+                setattr(document, "date_of_expiry", normalized_expiry)
+                
+    return document
+
+
+# ============================================================
+# INTERNAL CLEANING FUNCTIONS
+# ============================================================
 
 def _normalize_spaces(value) -> str | None:
     if value is None:
@@ -270,7 +270,7 @@ def _name_review_reasons(name: str | None) -> list[str]:
 
     tokens = [token for token in name.split() if token]
     if len(tokens) < 2 or len(tokens) > 4:
-        reasons.append("Aadhaar name did not look like a clean 2-4 token name.")
+        reasons.append("Name did not look like a clean 2-4 token name.")
     if any(len(token) < 2 for token in tokens):
         reasons.append("Name contains very short fragments.")
     if any(re.search(r"(.)\1\1", token.lower()) for token in tokens):
@@ -309,21 +309,6 @@ def _best_ocr_name_candidate(ocr_text: str) -> str | None:
     return candidates[0]
 
 
-def _normalize_aadhaar_dob(value, ocr_text: str) -> tuple[str | None, str | None]:
-    candidate = _normalize_spaces(value)
-    normalized = _coerce_dob(candidate)
-    if normalized:
-        return normalized, None
-
-    ocr_match = _extract_year_or_date_from_text(ocr_text)
-    if ocr_match:
-        return ocr_match, "Date of birth was normalized from OCR text."
-
-    if candidate:
-        return None, "Date of birth did not match DD/MM/YYYY or YYYY."
-    return None, None
-
-
 def _coerce_dob(value: str | None) -> str | None:
     if not value:
         return None
@@ -334,7 +319,7 @@ def _coerce_dob(value: str | None) -> str | None:
     year_match = re.fullmatch(r"(19\d{2}|20\d{2})", value)
     if year_match:
         year = int(year_match.group(1))
-        if 1900 <= year <= datetime.now().year:
+        if 1900 <= year <= datetime.now().year + 20: # Expiry dates could be in the future
             return str(year)
         return None
 
@@ -348,46 +333,13 @@ def _coerce_dob(value: str | None) -> str | None:
     except ValueError:
         return None
 
-    if parsed.year > datetime.now().year:
-        return None
-
     return f"{day:02d}/{month:02d}/{year:04d}"
 
 
-def _extract_year_or_date_from_text(text: str) -> str | None:
-    if not text:
-        return None
-
-    date_match = re.search(r"\b(\d{2})[\/\-\.](\d{2})[\/\-\.](\d{4})\b", text)
-    if date_match:
-        return _coerce_dob("/".join(date_match.groups()))
-
-    year_match = re.search(r"\b(19\d{2}|20\d{2})\b", text)
-    if year_match:
-        return _coerce_dob(year_match.group(1))
-
-    return None
-
-
-def _normalize_gender(value, ocr_text: str) -> tuple[str | None, str | None]:
-    ocr_gender = _extract_gender_from_ocr(ocr_text)
-    if ocr_gender:
-        candidate = _normalize_spaces(value)
-        if candidate and _normalize_gender_token(candidate) not in {None, ocr_gender}:
-            return ocr_gender, "Gender was corrected using OCR text evidence."
-        return ocr_gender, None
-
-    candidate = _normalize_spaces(value)
-    return _normalize_gender_token(candidate), None
-
-
 def _normalize_masked_aadhaar(value, ocr_text: str) -> tuple[str | None, str | None]:
-    # CRITICAL: Force masking if Gemini returned full unmasked number
     if value:
-        # Check if value contains a full 12-digit Aadhaar (unmasked)
         digits_only = re.sub(r"\D", "", str(value))
         if len(digits_only) == 12:
-            # Force mask it - only show last 4 digits
             last4 = digits_only[-4:]
             return f"XXXX XXXX {last4}", "Aadhaar number was force-masked for security."
     
@@ -487,73 +439,3 @@ def _extract_aadhaar_candidates_from_line(line: str) -> list[str]:
         candidates.append(f"00000000{m}")
         
     return candidates
-
-
-def _normalize_gender_token(value: str | None) -> str | None:
-    if not value:
-        return None
-    lower = value.lower()
-    if lower in {"male", "m", HINDI_MALE.lower()}:
-        return "Male"
-    if lower in {"female", "f", HINDI_FEMALE.lower()}:
-        return "Female"
-    return None
-
-
-def _extract_gender_from_ocr(text: str) -> str | None:
-    if not text:
-        return None
-
-    lowered = text.lower()
-    
-    # Handle common OCR corruptions like 'fe male'
-    is_female = bool(re.search(r"\bfemale\b", lowered) or "fe male" in lowered or HINDI_FEMALE in text)
-    if is_female:
-        return "Female"
-        
-    is_male = bool(re.search(r"\bmale\b", lowered) or HINDI_MALE in text)
-    if is_male:
-        return "Male"
-        
-    return None
-
-
-def _normalize_pin_code(value, address, ocr_text: str) -> str | None:
-    candidate = _extract_six_digits(value)
-    if candidate:
-        return candidate
-
-    candidate = _extract_six_digits(address)
-    if candidate:
-        return candidate
-
-    return _extract_six_digits(ocr_text)
-
-
-def _extract_six_digits(value) -> str | None:
-    text = _normalize_spaces(value)
-    if not text:
-        return None
-    match = re.search(r"\b(\d{6})\b", text)
-    return match.group(1) if match else None
-
-
-def _normalize_address(value) -> str | None:
-    address = _normalize_spaces(value)
-    if not address:
-        return None
-    if len(address) < 10:
-        return None
-    if len(re.findall(r"[A-Za-z]", address)) < 6:
-        return None
-    return address
-
-
-def _normalize_side_detected(value) -> str | None:
-    text = _normalize_spaces(value)
-    if not text:
-        return None
-    lower = text.lower()
-    if lower in {"front", "back", "both"}:
-        return lower
-    return None

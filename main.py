@@ -201,7 +201,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="frontend"), name="static")
+# Serves React build static files (JS, CSS, images) from Vite
+if os.path.exists("web/dist"):
+    app.mount("/assets", StaticFiles(directory="web/dist/assets"), name="assets")
 
 # Include routers
 app.include_router(upload_router, prefix="/api")
@@ -211,12 +213,33 @@ app.include_router(batch_router, prefix="/api", tags=["batch"])
 
 @app.get("/")
 def home():
-    response = FileResponse("frontend/index.html")
+    if os.path.exists("web/dist/index.html"):
+        response = FileResponse("web/dist/index.html")
+    else:
+        # Fallback if front-end hasn't been built yet
+        return {"message": "Document Intelligence Backend is healthy. Please build frontend assets with 'npm run build' inside web/."}
+    
     # Disable caching for development
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Pragma"] = "no-cache"
     response.headers["Expires"] = "0"
     return response
+
+
+@app.get("/{catchall:path}")
+def fallback(catchall: str):
+    """
+    Catch-all route to serve the SPA React application index.html for any sub-routes
+    (like /batch, /history, /settings) so page reloads do not trigger 404s.
+    """
+    if catchall.startswith("api") or catchall == "health" or catchall == "metrics":
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Not Found")
+    
+    if os.path.exists("web/dist/index.html"):
+        return FileResponse("web/dist/index.html")
+    return {"message": "Frontend assets not found. Please build the frontend."}
+
 
 
 @app.get("/health")
