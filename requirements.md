@@ -30,6 +30,7 @@ The backend is built using FastAPI and orchestrates the worker queue, caching sy
 * **Pillow** (`12.2.0`) — Image processing library.
 * **python-dotenv** (`1.2.2`) — Configuration loading from `.env` files.
 * **opencv-python** (`>=4.13.0`) & **numpy** (`>=2.4.4`) — Advanced OCR preprocessing.
+* **pytest** (`>=8.0.0`) & **pytest-asyncio** (`>=0.23.0`) — Testing frameworks for the backend.
 
 ### Installation Command
 From the project root:
