@@ -1,0 +1,24 @@
+fastapi==0.136.1
+uvicorn==0.46.0
+python-multipart==0.0.27
+pydantic==2.13.3
+pytesseract==0.3.13
+pdfplumber==0.11.9
+pypdfium2==5.7.1
+pillow==12.2.0
+python-dotenv==1.2.2
+aiofiles==24.1.0
+
+# AI Providers
+google-generativeai>=0.8.0
+groq>=0.11.0
+
+# Advanced OCR preprocessing and text cleaning
+opencv-python>=4.13.0
+numpy>=2.4.4
+ftfy==6.3.1
+
+# Optional: PaddleOCR for better handwriting/Asian language support
+# Uncomment to install (requires ~500MB):
+# paddleocr==2.7.3
+# paddlepaddle==2.6.0
