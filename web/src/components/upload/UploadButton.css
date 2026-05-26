@@ -1,0 +1,98 @@
+/* =============================================
+   UploadButton — Animated Submit Button
+   ============================================= */
+
+.upload-button {
+  position: relative;
+  width: 100%;
+  padding: var(--space-md) var(--space-xl);
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: white;
+  cursor: pointer;
+  overflow: hidden;
+  background: var(--accent-gradient);
+  background-size: 200% 200%;
+  transition:
+    background-position var(--transition-slow),
+    box-shadow var(--transition-base),
+    opacity var(--transition-fast);
+}
+
+.upload-button:hover:not(.upload-button--disabled) {
+  background-position: 100% 50%;
+  box-shadow: var(--shadow-glow-blue), var(--shadow-glow-purple);
+}
+
+.upload-button:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+/* ---------- States ---------- */
+
+.upload-button--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: var(--accent-gradient);
+  box-shadow: none;
+}
+
+.upload-button--loading {
+  cursor: wait;
+  animation: gradient-shift 2s ease infinite;
+  background-size: 200% 200%;
+}
+
+/* ---------- Content ---------- */
+
+.upload-button__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+}
+
+.upload-button__spinner {
+  animation: spin 1s linear infinite;
+  width: 18px;
+  height: 18px;
+}
+
+/* ---------- Shine overlay ---------- */
+
+.upload-button__shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.12),
+    transparent
+  );
+  pointer-events: none;
+}
+
+.upload-button:hover:not(.upload-button--disabled) .upload-button__shine {
+  animation: shine-sweep 1.2s ease forwards;
+}
+
+@keyframes shine-sweep {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .upload-button {
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--text-sm);
+  }
+}

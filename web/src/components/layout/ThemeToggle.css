@@ -1,0 +1,70 @@
+/* =============================================
+   ThemeToggle — Animated Sun/Moon Toggle
+   ============================================= */
+
+.theme-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.theme-toggle__track {
+  position: relative;
+  width: 56px;
+  height: 30px;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  cursor: pointer;
+  padding: 3px;
+  transition:
+    background var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.theme-toggle__track:hover {
+  border-color: var(--glass-border-hover);
+}
+
+.theme-toggle__track--dark {
+  box-shadow: 0 0 12px rgba(139, 92, 246, 0.2), inset 0 0 8px rgba(139, 92, 246, 0.05);
+}
+
+.theme-toggle__track--light {
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.2), inset 0 0 8px rgba(245, 158, 11, 0.05);
+}
+
+.theme-toggle__thumb {
+  position: absolute;
+  top: 3px;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-gradient);
+  box-shadow: var(--shadow-sm);
+}
+
+.theme-toggle__thumb--dark {
+  background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+}
+
+.theme-toggle__thumb--light {
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+
+.theme-toggle__icon {
+  color: white;
+  width: 14px;
+  height: 14px;
+}
+
+/* Focus styles */
+.theme-toggle__track:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}

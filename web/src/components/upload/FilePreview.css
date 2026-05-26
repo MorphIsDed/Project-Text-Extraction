@@ -1,0 +1,125 @@
+/* =============================================
+   FilePreview — Selected File Preview Card
+   ============================================= */
+
+.file-preview {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  transition:
+    background var(--transition-base),
+    border-color var(--transition-base),
+    box-shadow var(--transition-base);
+}
+
+.file-preview:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--glass-border-hover);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+/* ---------- Icon ---------- */
+
+.file-preview__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-md);
+  flex-shrink: 0;
+}
+
+.file-preview__icon--pdf {
+  background: var(--accent-red-soft);
+  color: var(--accent-red);
+}
+
+.file-preview__icon--image {
+  background: var(--accent-blue-soft);
+  color: var(--accent-blue);
+}
+
+.file-preview__icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* ---------- Info ---------- */
+
+.file-preview__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.file-preview__name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-preview__size {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* ---------- Remove Button ---------- */
+
+.file-preview__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition:
+    color var(--transition-fast),
+    background var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.file-preview__remove:hover {
+  color: var(--accent-red);
+  background: var(--accent-red-soft);
+  border-color: var(--accent-red-soft);
+}
+
+.file-preview__remove svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 480px) {
+  .file-preview {
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
+  }
+
+  .file-preview__icon {
+    width: 36px;
+    height: 36px;
+  }
+
+  .file-preview__icon svg {
+    width: 18px;
+    height: 18px;
+  }
+}

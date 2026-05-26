@@ -1,0 +1,94 @@
+/* =============================================
+   App — Root Layout and Animated Background Orbs
+   ============================================= */
+
+.app-layout {
+  min-height: 100vh;
+  position: relative;
+  background: var(--bg-main);
+  color: var(--text-primary);
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  transition: background-color var(--transition-slow);
+}
+
+.app-main {
+  flex-grow: 1;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Drifting Colorful Background Orbs ---------- */
+
+.bg-orbs {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 0.75;
+  transition: opacity var(--transition-slow);
+}
+
+/* Light mode adjustments */
+[data-theme='light'] .bg-orbs {
+  opacity: 0.35;
+}
+
+.orb {
+  position: absolute;
+  border-radius: var(--radius-full);
+  filter: blur(120px);
+  will-change: transform;
+}
+
+.orb-1 {
+  top: 15%;
+  left: 10%;
+  width: 35vw;
+  height: 35vw;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.25));
+  animation: float-orb-1 25s infinite alternate ease-in-out;
+}
+
+.orb-2 {
+  bottom: 10%;
+  right: 15%;
+  width: 40vw;
+  height: 40vw;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(16, 185, 129, 0.18));
+  animation: float-orb-2 30s infinite alternate ease-in-out;
+}
+
+.orb-3 {
+  top: 50%;
+  left: 60%;
+  width: 25vw;
+  height: 25vw;
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.15), rgba(99, 102, 241, 0.15));
+  animation: float-orb-3 20s infinite alternate ease-in-out;
+}
+
+/* Keyframes */
+@keyframes float-orb-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(6vw, 4vh) scale(1.1); }
+  100% { transform: translate(-3vw, -8vh) scale(0.95); }
+}
+
+@keyframes float-orb-2 {
+  0% { transform: translate(0, 0) scale(0.95); }
+  50% { transform: translate(-5vw, -6vh) scale(1.05); }
+  100% { transform: translate(4vw, 5vh) scale(1); }
+}
+
+@keyframes float-orb-3 {
+  0% { transform: translate(0, 0) scale(1.05); }
+  50% { transform: translate(8vw, -5vh) scale(0.9); }
+  100% { transform: translate(-6vw, 4vh) scale(1.1); }
+}

@@ -1,0 +1,71 @@
+/* =============================================
+   DocumentBadge — Color-coded document type pill
+   ============================================= */
+
+.doc-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 6px 16px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  position: relative;
+  overflow: hidden;
+  cursor: default;
+  user-select: none;
+}
+
+/* Gradient background applied via inline style from meta */
+
+/* Subtle glow effect */
+.doc-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  pointer-events: none;
+  box-shadow: 0 0 20px currentColor;
+}
+
+.doc-badge:hover::after {
+  opacity: 0.4;
+}
+
+/* Shimmer overlay for polish */
+.doc-badge::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.15),
+    transparent
+  );
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.doc-badge:hover::before {
+  left: 100%;
+}
+
+.doc-badge__icon {
+  font-size: var(--text-base);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.doc-badge__label {
+  letter-spacing: 0.02em;
+  line-height: 1;
+}

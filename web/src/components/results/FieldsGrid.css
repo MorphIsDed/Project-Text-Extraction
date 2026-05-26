@@ -1,0 +1,16 @@
+/* =============================================
+   FieldsGrid — Responsive grid of field cards
+   ============================================= */
+
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+}
+
+@media (max-width: 540px) {
+  .fields-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}

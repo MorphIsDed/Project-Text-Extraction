@@ -1,0 +1,107 @@
+/* =============================================
+   ReviewNotes — Amber warning list card
+   ============================================= */
+
+.review-notes {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--accent-amber-soft);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle amber top accent bar */
+.review-notes::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-amber), var(--accent-red));
+}
+
+.review-notes__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.review-notes__icon {
+  color: var(--accent-amber);
+  flex-shrink: 0;
+}
+
+.review-notes__title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.review-notes__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent-amber-soft);
+  color: var(--accent-amber);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-family: var(--font-sans);
+  margin-left: auto;
+}
+
+.review-notes__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.review-notes__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-left: 3px solid var(--accent-amber);
+  background: var(--accent-amber-soft);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-family: var(--font-sans);
+  transition: background var(--transition-fast);
+}
+
+.review-notes__item:hover {
+  background: var(--accent-amber-glow);
+}
+
+.review-notes__bullet {
+  color: var(--accent-amber);
+  font-size: var(--text-xs);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+/* Needs review warning styling (no notes) */
+.review-notes--warning-only {
+  border-color: var(--accent-amber);
+  animation: pulse-glow-amber 3s ease-in-out infinite;
+}
+
+.review-notes__warning-text {
+  font-size: var(--text-sm);
+  color: var(--accent-amber);
+  font-weight: 500;
+  font-family: var(--font-sans);
+}

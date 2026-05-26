@@ -1,0 +1,102 @@
+/* =============================================
+   StatusBanner — Animated Alert Banner
+   ============================================= */
+
+.status-banner {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  border-left: 4px solid transparent;
+  transition: all var(--transition-base);
+  z-index: 10;
+}
+
+/* Glassmorphic Alert Variants */
+.status-banner--success {
+  background: rgba(16, 185, 129, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-left: 4px solid #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.05);
+}
+
+.status-banner--error {
+  background: rgba(239, 68, 68, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-left: 4px solid #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.05);
+}
+
+.status-banner--info {
+  background: rgba(59, 130, 246, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-left: 4px solid #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.05);
+}
+
+/* Icons */
+.status-banner__icon {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin-top: 2px;
+}
+
+.status-banner--success .status-banner__icon {
+  color: #10b981;
+}
+
+.status-banner--error .status-banner__icon {
+  color: #ef4444;
+}
+
+.status-banner--info .status-banner__icon {
+  color: #3b82f6;
+}
+
+/* Content */
+.status-banner__content {
+  flex-grow: 1;
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+/* Close button */
+.status-banner__close {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  margin-top: -2px;
+  margin-right: -6px;
+}
+
+.status-banner__close:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+@media (max-width: 480px) {
+  .status-banner {
+    padding: var(--space-sm) var(--space-md);
+    gap: var(--space-sm);
+  }
+}

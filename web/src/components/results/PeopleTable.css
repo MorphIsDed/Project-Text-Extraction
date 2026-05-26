@@ -1,0 +1,132 @@
+/* =============================================
+   PeopleTable — eKYC multi-person data table
+   ============================================= */
+
+.people-table {
+  background: var(--bg-card);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+  overflow: hidden;
+}
+
+.people-table__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.people-table__icon {
+  color: var(--accent-blue);
+  flex-shrink: 0;
+}
+
+.people-table__title {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+}
+
+.people-table__count {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 24px;
+  padding: 0 8px;
+  border-radius: var(--radius-full);
+  background: var(--accent-blue-soft);
+  color: var(--accent-blue);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  font-family: var(--font-sans);
+}
+
+/* Scrollable wrapper for mobile */
+.people-table__scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.people-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+}
+
+/* Table header */
+.people-table__th {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid var(--glass-border);
+  white-space: nowrap;
+}
+
+/* Table body */
+.people-table__td {
+  padding: var(--space-sm) var(--space-md);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.people-table__td--empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.people-table__td--index {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: var(--text-xs);
+  width: 48px;
+  text-align: center;
+}
+
+/* Alternating rows */
+.people-table__row:nth-child(even) {
+  background: var(--bg-card);
+}
+
+.people-table__row:nth-child(odd) {
+  background: transparent;
+}
+
+.people-table__row {
+  transition: background var(--transition-fast);
+}
+
+.people-table__row:hover {
+  background: var(--bg-card-hover);
+}
+
+/* Remove bottom border from last row */
+.people-table__row:last-child .people-table__td {
+  border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .people-table__header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .people-table__th,
+  .people-table__td {
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--text-xs);
+  }
+}
